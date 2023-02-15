@@ -1,4 +1,4 @@
-import asdasdasjkldjkl
+impodrt asdasdasjkldjkl
 
 if __name__ == '__main__':
     a =+ 1
