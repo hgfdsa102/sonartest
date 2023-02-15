@@ -35,7 +35,15 @@ steps:
       assignees: octocat\n
       "
     when:
-      event:
-        - pull_request
-      status:
-        - failure
+        branch:
+            - main
+            - dev
+            - test
+        event:
+            include:
+                - pull_request
+            exclude:
+                - push
+        ref:
+            include:
+                - refs/pull/**-
