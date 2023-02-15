@@ -1,0 +1,21 @@
+kind: pipeline
+type: docker
+name: python-version
+
+# arm(mac)에서 빌드 구축한 경우 반드시 플렛폼 정보를 명시해줘야 빌드가 시작 됨
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: version
+    image: python:3.7
+    commands:
+      - python --version
+
+  - name: code-analysis
+    image: aosapps/drone-sonar-plugin
+    environment:
+      # todo: secret 처리 작업
+      PLUGIN_SONAR_HOST: http://192.168.1.200:9001
+      PLUGIN_SONAR_TOKEN: 631a9a841238f5186619369f6839d6908be7a463
