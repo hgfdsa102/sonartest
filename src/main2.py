@@ -1,10 +1,4 @@
-def 123123():
-    a = 1
-    b = 2
-    asdas1111111111111111111
-    if True:
-        return a
-    return b
+jsalkdjsalkdjlkasdjlksadjklsadjo2`19o8379281o
 
 
 if __name__ == '__main__':
