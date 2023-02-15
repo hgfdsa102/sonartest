@@ -7,6 +7,9 @@ def testerror21():
     return b
 
 
+def True:
+    return True
+
 if __name__ == '__main__':
     exit(1)
     print("hello main")
