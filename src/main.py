@@ -1,6 +1,7 @@
 def testerror21():
     a = 1
     b = 2
+    asdas
     if True:
         return a
     return b
