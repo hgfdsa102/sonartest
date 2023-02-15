@@ -27,7 +27,7 @@ steps:
         from_secret: pr_rsa_key
       app_id:
         from_secret: pr_app_id
-      comment_text: Some checks failed to pass. Please fix them and update the PR.
+      comment_file: test-results.txt
     when:
       event:
         - pull_request
