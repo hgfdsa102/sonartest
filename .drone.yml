@@ -30,7 +30,7 @@ steps:
       comment_text: "
       name: Tracking issue\n
       about: Use this template for tracking new features.\n
-      title: "[DATE]: [FEATURE NAME]"\n
+      title: tile\n
       labels: tracking issue, needs triage\n
       assignees: octocat\n
       "
