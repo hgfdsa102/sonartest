@@ -1,4 +1,4 @@
-def testerror():
+def testerror1():
     a = 1
     b = 2
     if True:
