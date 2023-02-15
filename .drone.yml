@@ -19,6 +19,21 @@ steps:
       # todo: secret 처리 작업
       PLUGIN_SONAR_HOST: http://192.168.1.200:9001
       PLUGIN_SONAR_TOKEN: 631a9a841238f5186619369f6839d6908be7a463
+    when:
+        branch:
+            - main
+            - dev
+            - test
+        event:
+            include:
+                - pull_request
+            exclude:
+                - push
+        ref:
+            include:
+                - refs/pull/**-
+
+
 
   - name: pr_comment
     image: rustycl0ck/drone-pr-comment
@@ -35,15 +50,7 @@ steps:
       assignees: octocat\n
       "
     when:
-        branch:
-            - main
-            - dev
-            - test
-        event:
-            include:
-                - pull_request
-            exclude:
-                - push
-        ref:
-            include:
-                - refs/pull/**-
+      event:
+        - pull_request
+      status:
+        - failure
