@@ -14,7 +14,7 @@ steps:
       - python --version
 
   - name: code-analysis
-    image: aosapps/drone-sonar-plugin
+    image: drone-sonar-plugin:1
     environment:
       # todo: secret 처리 작업
       PLUGIN_SONAR_HOST: http://192.168.1.200:9001
