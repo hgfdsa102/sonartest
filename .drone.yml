@@ -8,10 +8,10 @@ platform:
   arch: amd64
 
 steps:
-  - name: version
-    image: python:3.7
-    commands:
-      - python --version
+#  - name: version
+#    image: python:3.7
+#    commands:
+#      - python --version
 
   - name: code-analysis
     image: drone-sonar-plugin:1
@@ -33,22 +33,22 @@ steps:
         include:
           - refs/pull/**
 
-  - name: pr_comment
-    image: rustycl0ck/drone-pr-comment
-    settings:
-      rsa_key:
-        from_secret: pr_rsa_key
-      app_id:
-        from_secret: pr_app_id
-      comment_text: "
-      name: Tracking issue\n
-      about: Use this template for tracking new features.\n
-      title: tile\n
-      labels: tracking issue, needs triage\n
-      assignees: octocat\n
-      "
-    when:
-      event:
-        - pull_request
-      status:
-        - failure
+#  - name: pr_comment
+#    image: rustycl0ck/drone-pr-comment
+#    settings:
+#      rsa_key:
+#        from_secret: pr_rsa_key
+#      app_id:
+#        from_secret: pr_app_id
+#      comment_text: "
+#      name: Tracking issue\n
+#      about: Use this template for tracking new features.\n
+#      title: tile\n
+#      labels: tracking issue, needs triage\n
+#      assignees: octocat\n
+#      "
+#    when:
+#      event:
+#        - pull_request
+#      status:
+#        - failure
