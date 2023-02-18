@@ -49,16 +49,16 @@ steps:
        -X"
       - ls -al /drone/src/.scannerwork/scanner-report
       - cat /drone/src/.scannerwork/scanner-report/metadata.pb
-    when:
-          branch:
-            - main
-            - master
-            - ${DRONE_TARGET_BRANCH}
-          event:
-            include:
-              - pull_request
-            exclude:
-              - push
+#    when:
+#          branch:
+#            - main
+#            - master
+#            - ${DRONE_TARGET_BRANCH}
+#          event:
+#            include:
+#              - pull_request
+#            exclude:
+#              - push
 #          ref:
 #            include:
 #              - refs/pull/**
