@@ -47,6 +47,7 @@ steps:
        -Dsonar.verbose=true \
        -Dsonar.ws.timeout=1200 \
        -X"
+      - cat /drone/src/.scannerwork/scanner-report
     when:
           branch:
             - main
