@@ -48,6 +48,7 @@ steps:
        -Dsonar.ws.timeout=1200 \
        -X"
       - ls -al /drone/src/.scannerwork/scanner-report
+      - sleep 1d
     when:
           branch:
             - main
