@@ -59,9 +59,9 @@ steps:
               - pull_request
             exclude:
               - push
-          ref:
-            include:
-              - refs/pull/**
+#          ref:
+#            include:
+#              - refs/pull/**
 
 #kind: pipeline
 #type: docker
