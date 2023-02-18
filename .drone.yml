@@ -42,10 +42,10 @@ steps:
        -Dsonar.pullrequest.provider=github \
        -Dsonar.pullrequest.key=${DRONE_PULL_REQUEST} \
        -Dsonar.pullrequest.github.repository=${DRONE_REPO} \
-       -Dsonar.pullrequest.base=${DRONE_SOURCE_BRANCH} \
-       -Dsonar.pullrequest.branch=${DRONE_TARGET_BRANCH}  \
+       -Dsonar.pullrequest.base=${DRONE_TARGET_BRANCH} \
+       -Dsonar.pullrequest.branch=${DRONE_SOURCE_BRANCH}  \
        -Dsonar.verbose=true \
-       -Dsonar.ws.timeout=120"
+       -Dsonar.ws.timeout=1200"
     when:
           branch:
             - main
