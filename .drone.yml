@@ -1,54 +1,114 @@
+---
 kind: pipeline
-type: docker
-name: python-version
-
-# arm(mac)에서 빌드 구축한 경우 반드시 플렛폼 정보를 명시해줘야 빌드가 시작 됨
-platform:
-  os: linux
-  arch: amd64
+type: kubernetes
+name: source-code-analysis
+#drone sonarqube template VERSION:2022-09-30
 
 steps:
-#  - name: version
-#    image: python:3.7
-#    commands:
-#      - python --version
-
-  - name: code-analysis
-    image: drone-sonar-plugin:1
+  - name: source-code-analysis-pr
+    pull: if-not-exists
+    image: sonarsource/sonar-scanner-cli
     environment:
-      # todo: secret 처리 작업
-      PLUGIN_SONAR_HOST: http://192.168.1.200:9001
-      PLUGIN_SONAR_TOKEN: 631a9a841238f5186619369f6839d6908be7a463
+        SAST_SONARQUBE_SCANNER_TOKEN:
+          from_secret: sast_sonarqube_sonarscanner_token
+        SAST_SONARQUBE_API_TOKEN:
+          from_secret: sast_sonarqube_api_token
+        SAST_SONARQUBE_WEB_DOMAIN:
+          from_secret: sast_sonarqube_web_domain
+        SAST_SONARQUBE_GITHUB_APP:
+          from_secret: sast_sonarqube_github_app
+    volumes:
+      - name: cache
+        path: ~/.sonar
+    commands:
+      - SAST_SONARQUBE_PROJECT_KEY=${DRONE_REPO_NAMESPACE}_${DRONE_REPO_NAME}
+      - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "https://$${SAST_SONARQUBE_WEB_DOMAIN}/api/projects/create?name=$${SAST_SONARQUBE_PROJECT_KEY}&project=$${SAST_SONARQUBE_PROJECT_KEY}&visibility=private"
+      - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "https://$${SAST_SONARQUBE_WEB_DOMAIN}/api/project_branches/rename?name=${DRONE_TARGET_BRANCH}&project=$${SAST_SONARQUBE_PROJECT_KEY}"
+      - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "https://$${SAST_SONARQUBE_WEB_DOMAIN}/api/alm_settings/set_github_binding?almSetting=$${SAST_SONARQUBE_GITHUB_APP}&monorepo=false&project=$${SAST_SONARQUBE_PROJECT_KEY}&repository=${DRONE_REPO}&summaryCommentEnabled=true"
+      - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "https://$${SAST_SONARQUBE_WEB_DOMAIN}/api/qualitygates/select?projectKey=$${SAST_SONARQUBE_PROJECT_KEY}&gateName=${DRONE_REPO_NAME}"
+      - "sonar-scanner \
+       -Dsonar.projectKey=$${SAST_SONARQUBE_PROJECT_KEY} \
+       -Dsonar.sources=. \
+       -Dsonar.host.url=https://$${SAST_SONARQUBE_WEB_DOMAIN} \
+       -Dsonar.login=$${SAST_SONARQUBE_SCANNER_TOKEN} \
+       -Dsonar.github.disableInlineComments=false \
+       -Dsonar.java.binaries=. \
+       -Dsonar.java.libraries=. \
+       -Dsonar.qualitygate.wait=true \
+       -Dsonar.qualitygate.timeout=1200 \
+       -Dsonar.issuesReport.console.enable=true \
+       -Dsonar.pullrequest.provider=github \
+       -Dsonar.pullrequest.key=${DRONE_PULL_REQUEST} \
+       -Dsonar.pullrequest.github.repository=${DRONE_REPO} \
+       -Dsonar.pullrequest.base=${DRONE_TARGET_BRANCH} \
+       -Dsonar.pullrequest.branch=${DRONE_SOURCE_BRANCH}  \
+       -Dsonar.verbose=true \
+       -Dsonar.ws.timeout=120"
     when:
-      branch:
-        - main
-        - dev
-        - test
-      event:
-        include:
-          - pull_request
-        exclude:
-          - push
-      ref:
-        include:
-          - refs/pull/**
+          branch:
+            - main
+            - master
+            - ${DRONE_TARGET_BRANCH}
+          event:
+            include:
+              - pull_request
+            exclude:
+              - push
+          ref:
+            include:
+              - refs/pull/**
 
-#  - name: pr_comment
-#    image: rustycl0ck/drone-pr-comment
-#    settings:
-#      rsa_key:
-#        from_secret: pr_rsa_key
-#      app_id:
-#        from_secret: pr_app_id
-#      comment_text: "
-#      name: Tracking issue\n
-#      about: Use this template for tracking new features.\n
-#      title: tile\n
-#      labels: tracking issue, needs triage\n
-#      assignees: octocat\n
-#      "
+#kind: pipeline
+#type: docker
+#name: python-version
+#
+## arm(mac)에서 빌드 구축한 경우 반드시 플렛폼 정보를 명시해줘야 빌드가 시작 됨
+#platform:
+#  os: linux
+#  arch: amd64
+#
+#steps:
+##  - name: version
+##    image: python:3.7
+##    commands:
+##      - python --version
+#
+#  - name: code-analysis
+#    image: drone-sonar-plugin:1
+#    environment:
+#      # todo: secret 처리 작업
+#      PLUGIN_SONAR_HOST: http://192.168.1.200:9001
+#      PLUGIN_SONAR_TOKEN: 631a9a841238f5186619369f6839d6908be7a463
 #    when:
+#      branch:
+#        - main
+#        - dev
+#        - test
 #      event:
-#        - pull_request
-#      status:
-#        - failure
+#        include:
+#          - pull_request
+#        exclude:
+#          - push
+#      ref:
+#        include:
+#          - refs/pull/**
+#
+##  - name: pr_comment
+##    image: rustycl0ck/drone-pr-comment
+##    settings:
+##      rsa_key:
+##        from_secret: pr_rsa_key
+##      app_id:
+##        from_secret: pr_app_id
+##      comment_text: "
+##      name: Tracking issue\n
+##      about: Use this template for tracking new features.\n
+##      title: tile\n
+##      labels: tracking issue, needs triage\n
+##      assignees: octocat\n
+##      "
+##    when:
+##      event:
+##        - pull_request
+##      status:
+##        - failure
