@@ -30,7 +30,7 @@ steps:
       - "sonar-scanner \
        -Dsonar.projectKey=$${SAST_SONARQUBE_PROJECT_KEY} \
        -Dsonar.sources=. \
-       -Dsonar.host.url=https://$${SAST_SONARQUBE_WEB_DOMAIN} \
+       -Dsonar.host.url=https://$${SONAR_HOST_URL} \
        -Dsonar.login=$${SAST_SONARQUBE_SCANNER_TOKEN} \
        -Dsonar.github.disableInlineComments=false \
        -Dsonar.java.binaries=. \
