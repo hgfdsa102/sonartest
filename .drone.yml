@@ -9,11 +9,12 @@ steps:
     pull: if-not-exists
     image: sonarsource/sonar-scanner-cli
     environment:
+        SONAR_HOST_URL: http://192.168.1.200:9001
         SAST_SONARQUBE_SCANNER_TOKEN:
           from_secret: sast_sonarqube_sonarscanner_token
         SAST_SONARQUBE_API_TOKEN:
           from_secret: sast_sonarqube_api_token
-        SAST_SONARQUBE_WEB_DOMAIN: gentle-dodo-96.telebit.io
+#        SAST_SONARQUBE_WEB_DOMAIN: gentle-dodo-96.telebit.io
 #          from_secret: https://gentle-dodo-96.telebit.io
         SAST_SONARQUBE_GITHUB_APP:
           from_secret: sast_sonarqube_github_app
