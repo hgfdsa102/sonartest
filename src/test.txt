@@ -1,0 +1,4 @@
+curl https://github.com/hgfdsa102/sonartest/pull/13 | jq '.title'
+
+
+curl https://github.com/hgfdsa102/sonartest/pull/13 | grep title | cut -d'"' -f4
