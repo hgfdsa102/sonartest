@@ -22,6 +22,7 @@ steps:
       - name: cache
         path: ~/.sonar
     commands:
+      - bash --version
       - echo $DRONE_PULL_REQUEST_TITLE
       - if [[ $DRONE_PULL_REQUEST_TITLE == *SONAR* ]]; then echo "Start Scanning"; else echo "Pass scanning"; fi
       - exit 1
