@@ -23,7 +23,7 @@ steps:
         path: ~/.sonar
     commands:
       - env
-      - if [[ $DRONE_PULL_REQUEST_TITLE == *SONAR* ]]; then echo "Start Scanning"; else exit 0; fi
+      - if [ $DRONE_PULL_REQUEST_TITLE == *SONAR* ]; then echo "Start Scanning"; else exit 0; fi
       - SAST_SONARQUBE_PROJECT_KEY=${DRONE_REPO_NAMESPACE}_${DRONE_REPO_NAME}
       - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "http://$${SAST_SONARQUBE_WEB_DOMAIN}/api/projects/create?name=$${SAST_SONARQUBE_PROJECT_KEY}&project=$${SAST_SONARQUBE_PROJECT_KEY}&visibility=private"
       - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "http://$${SAST_SONARQUBE_WEB_DOMAIN}/api/project_branches/rename?name=${DRONE_TARGET_BRANCH}&project=$${SAST_SONARQUBE_PROJECT_KEY}"
