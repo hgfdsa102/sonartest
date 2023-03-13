@@ -3,7 +3,7 @@ kind: pipeline
 type: docker
 name: source-code-analysis
 #drone sonarqube template VERSION:2022-09-30
-
+# 1
 steps:
   - name: source-code-analysis-pr
     pull: if-not-exists
@@ -22,8 +22,11 @@ steps:
       - name: cache
         path: ~/.sonar
     commands:
-      - git log --format=%B -n 1
-      - env
+      - bash --version
+      - echo $DRONE_PULL_REQUEST_TITLE
+      - if [[ $DRONE_PULL_REQUEST_TITLE == *SONAR* ]]; then echo "Start Scanning"; else echo "Pass scanning"; fi
+      - sh sonar.sh
+      - exit 1
       - SAST_SONARQUBE_PROJECT_KEY=${DRONE_REPO_NAMESPACE}_${DRONE_REPO_NAME}
       - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "http://$${SAST_SONARQUBE_WEB_DOMAIN}/api/projects/create?name=$${SAST_SONARQUBE_PROJECT_KEY}&project=$${SAST_SONARQUBE_PROJECT_KEY}&visibility=private"
       - curl -v -L -u "$${SAST_SONARQUBE_API_TOKEN}:" -X POST "http://$${SAST_SONARQUBE_WEB_DOMAIN}/api/project_branches/rename?name=${DRONE_TARGET_BRANCH}&project=$${SAST_SONARQUBE_PROJECT_KEY}"
